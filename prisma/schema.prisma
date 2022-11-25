@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Step {
+  id            String    @id @default(uuid())
+  description   String
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report_id String
+}
+
+model Screenshot {
+  id            String    @id @default(uuid())
+  url           String
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report_id String
+}
+
+model Note {
+  id            String    @id @default(uuid())
+  note          String
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report_id String
+}
+
+model BugReport {
+  id          String @id @default(uuid())
+  description String
+  name        String
+
+  steps        Step[]
+  screenshoots Screenshot[]
+  notes        Note[]
+
+  created_by     User   @relation(fields: [created_by_id], references: [id], name: "Created")
+  created_by_id  String
+  assigned_to    User   @relation(fields: [assigned_to_id], references: [id], name: "Assigned")
+  assigned_to_id String
+
+  external_id String?
+  reward_id   String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model User {
+  id          String  @id @default(uuid())
+  email       String  @unique
+  name        String
+  role        Role    @relation(fields: [role_id], references: [id])
+  role_id     String
+  external_id String?
+
+  assignedBugReports BugReport[] @relation("Assigned")
+  createdBugReports  BugReport[] @relation("Created")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Role {
+  id            String  @id @default(uuid())
+  name          String  @unique
+  can_create_br Boolean
+  can_update_br Boolean
+  can_delete_br Boolean
+  can_manage_br Boolean
+
+  can_create_rd Boolean
+  can_update_rd Boolean
+  can_delete_rd Boolean
+  can_manage_rd Boolean
+
+  can_create_users Boolean
+  can_update_users Boolean
+  can_delete_users Boolean
+  can_manage_users Boolean
+
+  default Boolean
+
+  users User[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
