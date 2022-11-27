@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { BugreportService } from './bugreport.service';
-import { BugreportController } from './bugreport.controller';
+import { BugReportService } from './bugreport.service';
+import { BugReportController } from './bugreport.controller';
 import { PrismaModule } from '@/prisma/prisma.module';
 
 @Module({
-  controllers: [BugreportController],
-  providers: [BugreportService],
+  controllers: [BugReportController],
+  providers: [BugReportService],
   imports: [PrismaModule],
 })
 export class BugreportModule {}

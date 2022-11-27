@@ -1,3 +1,4 @@
+import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import {
   Controller,
   Get,
@@ -7,39 +8,46 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { BugreportService } from './bugreport.service';
-import { CreateBugreportDto } from './dto/create-bugreport.dto';
-import { UpdateBugreportDto } from './dto/update-bugreport.dto';
+import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { BugReportService } from './bugreport.service';
+import { CreateBugReportDto } from './dto/create-bugreport.dto';
+import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
 @Controller('bugreport')
-export class BugreportController {
-  constructor(private readonly bugreportService: BugreportService) {}
+export class BugReportController {
+  constructor(private readonly bugReportService: BugReportService) {}
 
   @Post()
-  create(@Body() createBugreportDto: CreateBugreportDto) {
-    return this.bugreportService.create(createBugreportDto);
+  @ApiCreatedResponse({ type: BugReport })
+  create(@Body() createBugReportDto: CreateBugReportDto) {
+    const id = '8bccf86a-9fce-4961-9b9e-09196f28cc52';
+    return this.bugReportService.create(createBugReportDto, id);
   }
 
   @Get()
+  @ApiOkResponse({ type: BugReport, isArray: true })
   findAll() {
-    return this.bugreportService.findAll();
+    return this.bugReportService.findAll();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: BugReport })
   findOne(@Param('id') id: string) {
-    return this.bugreportService.findOne(+id);
+    return this.bugReportService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: BugReport })
   update(
     @Param('id') id: string,
-    @Body() updateBugreportDto: UpdateBugreportDto,
+    @Body() updateBugReportDto: UpdateBugReportDto,
   ) {
-    return this.bugreportService.update(+id, updateBugreportDto);
+    return this.bugReportService.update(id, updateBugReportDto);
   }
 
   @Delete(':id')
+  @ApiOkResponse({ type: BugReport })
   remove(@Param('id') id: string) {
-    return this.bugreportService.remove(+id);
+    return this.bugReportService.remove(id);
   }
 }

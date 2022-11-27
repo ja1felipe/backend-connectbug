@@ -29,11 +29,11 @@ CREATE TABLE "Note" (
 CREATE TABLE "BugReport" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "created_by_id" TEXT NOT NULL,
-    "assigned_to_id" TEXT NOT NULL,
+    "assigned_to_id" TEXT,
     "external_id" TEXT,
-    "reward_id" TEXT NOT NULL,
+    "reward_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -95,7 +95,7 @@ ALTER TABLE "Note" ADD CONSTRAINT "Note_bug_report_id_fkey" FOREIGN KEY ("bug_re
 ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_assigned_to_id_fkey" FOREIGN KEY ("assigned_to_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_assigned_to_id_fkey" FOREIGN KEY ("assigned_to_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

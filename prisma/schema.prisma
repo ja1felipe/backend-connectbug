@@ -13,40 +13,40 @@ generator client {
 model Step {
   id            String    @id @default(uuid())
   description   String
-  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id], onDelete: Cascade)
   bug_report_id String
 }
 
 model Screenshot {
   id            String    @id @default(uuid())
   url           String
-  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id], onDelete: Cascade)
   bug_report_id String
 }
 
 model Note {
   id            String    @id @default(uuid())
   note          String
-  bug_report    BugReport @relation(fields: [bug_report_id], references: [id])
+  bug_report    BugReport @relation(fields: [bug_report_id], references: [id], onDelete: Cascade)
   bug_report_id String
 }
 
 model BugReport {
   id          String @id @default(uuid())
   description String
-  name        String
+  title        String
 
   steps        Step[]
-  screenshoots Screenshot[]
+  screenshots Screenshot[]
   notes        Note[]
 
-  created_by     User   @relation(fields: [created_by_id], references: [id], name: "Created")
-  created_by_id  String
-  assigned_to    User   @relation(fields: [assigned_to_id], references: [id], name: "Assigned")
-  assigned_to_id String
+  created_by     User?   @relation(fields: [created_by_id], references: [id], name: "Created", onDelete: SetNull)
+  created_by_id  String?
+  assigned_to    User?   @relation(fields: [assigned_to_id], references: [id], name: "Assigned", onDelete: SetNull)
+  assigned_to_id String?
 
   external_id String?
-  reward_id   String
+  reward_id   String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
