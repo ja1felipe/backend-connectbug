@@ -1,6 +1,6 @@
 import { NoteEntity } from '@/notes/entities/note.entity';
 import { ScreenshotEntity } from '@/bugreport/entities/screenshot.entity';
-import { StepEntity } from '@/bugreport/entities/step.entity';
+import { StepEntity } from '@/steps/entities/step.entity';
 import { OmitType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma, Status } from '@prisma/client';
