@@ -8,4 +8,4 @@ import { PrismaModule } from '@/prisma/prisma.module';
   providers: [BugReportService],
   imports: [PrismaModule],
 })
-export class BugreportModule {}
+export class BugReportModule {}

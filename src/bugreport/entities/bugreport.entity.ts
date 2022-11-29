@@ -1,11 +1,11 @@
-import { NoteEntity } from '@/bugreport/entities/note.entity';
+import { NoteEntity } from '@/notes/entities/note.entity';
 import { ScreenshotEntity } from '@/bugreport/entities/screenshot.entity';
 import { StepEntity } from '@/bugreport/entities/step.entity';
 import { OmitType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsEnum } from 'class-validator';
 
 class OmitedScreenshotEntity extends OmitType(ScreenshotEntity, [
   'id',
@@ -72,6 +72,10 @@ export class BugReport implements Prisma.BugReportCreateManyInput {
   @IsString()
   @IsOptional()
   reward_id?: string;
+
+  @ApiProperty({ default: Status.PENDING, enum: Status })
+  @IsEnum(Status)
+  status?: Status;
 
   created_at?: string | Date;
   updated_at?: string | Date;

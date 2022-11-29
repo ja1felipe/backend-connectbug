@@ -8,12 +8,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BugReportService } from './bugreport.service';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
 import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
 @Controller('bugreport')
+@ApiTags('BugReports')
 export class BugReportController {
   constructor(private readonly bugReportService: BugReportService) {}
 

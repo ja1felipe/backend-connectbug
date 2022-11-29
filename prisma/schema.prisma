@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -31,6 +28,13 @@ model Note {
   bug_report_id String
 }
 
+enum Status {
+  PENDING
+  ACCEPT
+  DENIED
+  CLOSED
+}
+
 model BugReport {
   id          String @id @default(uuid())
   description String
@@ -39,6 +43,8 @@ model BugReport {
   steps        Step[]
   screenshots Screenshot[]
   notes        Note[]
+
+  status Status @default(PENDING)
 
   created_by     User?   @relation(fields: [created_by_id], references: [id], name: "Created", onDelete: SetNull)
   created_by_id  String?

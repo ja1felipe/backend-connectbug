@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('PENDING', 'ACCEPT', 'DENIED', 'CLOSED');
+
 -- CreateTable
 CREATE TABLE "Step" (
     "id" TEXT NOT NULL,
@@ -30,7 +33,8 @@ CREATE TABLE "BugReport" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "created_by_id" TEXT NOT NULL,
+    "status" "Status" NOT NULL DEFAULT 'PENDING',
+    "created_by_id" TEXT,
     "assigned_to_id" TEXT,
     "external_id" TEXT,
     "reward_id" TEXT,
@@ -83,16 +87,16 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 
 -- AddForeignKey
-ALTER TABLE "Step" ADD CONSTRAINT "Step_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Step" ADD CONSTRAINT "Step_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Screenshot" ADD CONSTRAINT "Screenshot_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Screenshot" ADD CONSTRAINT "Screenshot_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Note" ADD CONSTRAINT "Note_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Note" ADD CONSTRAINT "Note_bug_report_id_fkey" FOREIGN KEY ("bug_report_id") REFERENCES "BugReport"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BugReport" ADD CONSTRAINT "BugReport_assigned_to_id_fkey" FOREIGN KEY ("assigned_to_id") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
