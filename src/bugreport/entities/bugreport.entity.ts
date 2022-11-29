@@ -1,5 +1,5 @@
 import { NoteEntity } from '@/notes/entities/note.entity';
-import { ScreenshotEntity } from '@/bugreport/entities/screenshot.entity';
+import { ScreenshotEntity } from '@/screenshots/entities/screenshot.entity';
 import { StepEntity } from '@/steps/entities/step.entity';
 import { OmitType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
