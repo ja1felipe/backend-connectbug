@@ -51,6 +51,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "role_id" TEXT NOT NULL,
     "external_id" TEXT,
+    "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

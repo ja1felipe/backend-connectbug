@@ -38,11 +38,11 @@ enum Status {
 model BugReport {
   id          String @id @default(uuid())
   description String
-  title        String
+  title       String
 
-  steps        Step[]
+  steps       Step[]
   screenshots Screenshot[]
-  notes        Note[]
+  notes       Note[]
 
   status Status @default(PENDING)
 
@@ -65,6 +65,7 @@ model User {
   role        Role    @relation(fields: [role_id], references: [id])
   role_id     String
   external_id String?
+  password    String
 
   assignedBugReports BugReport[] @relation("Assigned")
   createdBugReports  BugReport[] @relation("Created")
