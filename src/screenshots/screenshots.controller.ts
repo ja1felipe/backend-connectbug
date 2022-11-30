@@ -2,9 +2,15 @@ import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ScreenshotsService } from './screenshots.service';
 import { CreateScreenshotDto } from './dto/create-screenshot.dto';
 import { UpdateScreenshotDto } from './dto/update-screenshot.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ScreenshotEntity } from '@/screenshots/entities/screenshot.entity';
 
+@ApiBearerAuth()
 @Controller('screenshots')
 @ApiTags('Screenshots')
 export class ScreenshotsController {

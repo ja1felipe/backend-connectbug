@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('ConnectBug')
     .setDescription('The connectBug API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

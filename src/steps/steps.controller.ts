@@ -2,9 +2,15 @@ import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StepsService } from './steps.service';
 import { CreateStepDto } from './dto/create-step.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { StepEntity } from '@/steps/entities/step.entity';
 
+@ApiBearerAuth()
 @Controller('steps')
 @ApiTags('Steps')
 export class StepsController {

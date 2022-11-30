@@ -2,9 +2,15 @@ import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { NoteEntity } from '@/notes/entities/note.entity';
 
+@ApiBearerAuth()
 @Controller('notes')
 @ApiTags('Notes')
 export class NotesController {
