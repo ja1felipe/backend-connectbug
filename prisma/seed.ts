@@ -46,6 +46,7 @@ async function main() {
       name: 'admin',
       email: 'admin@admin.com',
       role_id: role_admin.id,
+      password: '$2a$10$p5.HzKjeabYNvTD1JcTTDuAnbDyEt8nJvEJMSCTijDEIF9rXyKG6.', //Admin@123
     },
   });
   console.log({ admin });
