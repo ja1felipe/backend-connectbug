@@ -62,8 +62,7 @@ model User {
   id          String  @id @default(uuid())
   email       String  @unique
   name        String
-  role        Role    @relation(fields: [role_id], references: [id])
-  role_id     String
+  role        Role    @default(USER)
   external_id String?
   password    String
 
@@ -74,28 +73,9 @@ model User {
   updated_at DateTime @updatedAt
 }
 
-model Role {
-  id            String  @id @default(uuid())
-  name          String  @unique
-  can_create_br Boolean
-  can_update_br Boolean
-  can_delete_br Boolean
-  can_manage_br Boolean
-
-  can_create_rd Boolean
-  can_update_rd Boolean
-  can_delete_rd Boolean
-  can_manage_rd Boolean
-
-  can_create_users Boolean
-  can_update_users Boolean
-  can_delete_users Boolean
-  can_manage_users Boolean
-
-  default Boolean
-
-  users User[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+enum Role {
+  ADMIN
+  USER
+  DEV
+  QA
 }

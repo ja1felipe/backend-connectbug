@@ -19,7 +19,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
-      role_id: user.role_id,
+      role: user.role,
       external_id: user.external_id,
     };
 

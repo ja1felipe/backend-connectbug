@@ -1,6 +1,7 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { User } from '@/users/entities/user.entity';
 import { Injectable } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,8 +27,8 @@ export class UsersService {
     return await this.prisma.user.findUnique({ where: { email } });
   }
 
-  async findByRole(roleId: string): Promise<User[]> {
-    return await this.prisma.user.findMany({ where: { role_id: roleId } });
+  async findByRole(role: Role): Promise<User[]> {
+    return await this.prisma.user.findMany({ where: { role } });
   }
 
   async findOne(id: string): Promise<User> {
