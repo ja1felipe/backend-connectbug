@@ -52,7 +52,9 @@ model BugReport {
   assigned_to_id String?
 
   external_id String?
-  reward_id   String?
+
+  reward    Reward? @relation(fields: [reward_id], name: "Reward", references: [id], onDelete: SetNull)
+  reward_id String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -78,4 +80,19 @@ enum Role {
   USER
   DEV
   QA
+}
+
+model Reward {
+  id   String @id @default(uuid())
+  name String
+  url  String
+
+  notification_active Boolean @default(false)
+  notification_title  String?
+  notification_text   String?
+
+  bug_reports BugReport[] @relation("Reward")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
