@@ -6,7 +6,7 @@ import { UpdateScreenshotDto } from './dto/update-screenshot.dto';
 
 @Injectable()
 export class ScreenshotsService {
-  constructor(private psima: PrismaService) {}
+  constructor(private readonly psima: PrismaService) {}
 
   async create(
     createScreenshotDto: CreateScreenshotDto,

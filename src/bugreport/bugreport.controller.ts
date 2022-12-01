@@ -1,3 +1,5 @@
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { RolesGuard } from '@/auth/guards/roles.guard';
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import {
   Controller,
@@ -7,6 +9,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -14,6 +17,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { BugReportService } from './bugreport.service';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
 import { UpdateBugReportDto } from './dto/update-bugreport.dto';
@@ -33,6 +37,8 @@ export class BugReportController {
 
   @Get()
   @ApiOkResponse({ type: BugReport, isArray: true })
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.DEV, Role.QA)
   findAll() {
     return this.bugReportService.findAll();
   }
@@ -54,6 +60,8 @@ export class BugReportController {
 
   @Delete(':id')
   @ApiOkResponse({ type: BugReport })
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.DEV, Role.QA)
   remove(@Param('id') id: string) {
     return this.bugReportService.remove(id);
   }

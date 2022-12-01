@@ -6,7 +6,7 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 
 @Injectable()
 export class NotesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createNoteDto: CreateNoteDto): Promise<NoteEntity> {
     const note = await this.prisma.note.create({

@@ -6,7 +6,7 @@ import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
 @Injectable()
 export class BugReportService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private readonly _include = {
     steps: {

@@ -6,7 +6,7 @@ import { UpdateStepDto } from './dto/update-step.dto';
 
 @Injectable()
 export class StepsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createStepDto: CreateStepDto): Promise<StepEntity> {
     const step = await this.prisma.step.create({

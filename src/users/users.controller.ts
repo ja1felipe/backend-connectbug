@@ -6,14 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from '@/auth/decorators/roles.decorator';
+import { RolesGuard } from '@/auth/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @Controller('users')
 @ApiTags('Users')
+@UseGuards(RolesGuard)
+@Roles(Role.ADMIN)
+@ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -22,9 +29,9 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  @Get()
+  findMany() {
+    return this.usersService.findMany();
   }
 
   @Patch(':id')
