@@ -58,6 +58,12 @@ export class BugReportController {
     return this.bugReportService.update(id, updateBugReportDto);
   }
 
+  @Patch('conclude/:id')
+  @ApiOkResponse({ type: BugReport })
+  conclude(@Param('id') id: string) {
+    return this.bugReportService.conclude(id);
+  }
+
   @Delete(':id')
   @ApiOkResponse({ type: BugReport })
   @UseGuards(RolesGuard)

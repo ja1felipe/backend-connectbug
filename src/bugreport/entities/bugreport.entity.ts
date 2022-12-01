@@ -1,4 +1,5 @@
 import { NoteEntity } from '@/notes/entities/note.entity';
+import { Reward } from '@/rewards/entities/reward.entity';
 import { ScreenshotEntity } from '@/screenshots/entities/screenshot.entity';
 import { StepEntity } from '@/steps/entities/step.entity';
 import { OmitType } from '@nestjs/swagger';
@@ -55,6 +56,12 @@ export class BugReport implements Prisma.BugReportCreateManyInput {
   @Type(() => OmitedNoteEntity)
   @IsArray()
   notes?: OmitedNoteEntity[];
+
+  @ApiProperty({
+    type: Reward,
+  })
+  @Type(() => Reward)
+  reward?: Reward;
 
   @ApiProperty()
   @IsString()

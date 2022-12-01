@@ -1,12 +1,17 @@
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Status } from '@prisma/client';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
 import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
 @Injectable()
 export class BugReportService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly httpService: HttpService,
+  ) {}
 
   private readonly _include = {
     steps: {
@@ -24,6 +29,7 @@ export class BugReportService {
         url: true,
       },
     },
+    reward: true,
   };
 
   async create(
@@ -71,6 +77,43 @@ export class BugReportService {
     });
 
     return bugReport;
+  }
+
+  async conclude(id: string): Promise<BugReport> {
+    const bugReport = await this.prisma.bugReport.findUnique({
+      where: { id },
+    });
+
+    if (bugReport.status !== Status.ACCEPT) {
+      throw new BadRequestException(
+        'Only bug reports with status: "ACCEPT" can be closed',
+      );
+    }
+
+    const bugReportUpdated = await this.prisma.bugReport.update({
+      data: {
+        status: Status.CLOSED,
+      },
+      where: { id },
+      include: this._include,
+    });
+
+    if (bugReportUpdated.reward) {
+      try {
+        this.httpService.post(bugReportUpdated.reward.url, {
+          user_id: bugReportUpdated.created_by_id,
+          bug_report_id: bugReportUpdated.id,
+          bug_report_external_id: bugReportUpdated.external_id,
+          bug_report_assigned_to_id: bugReportUpdated.assigned_to_id,
+        });
+      } catch (err) {
+        console.error(
+          `Error sending reward webhook request of bug report with id ${bugReportUpdated.id}`,
+        );
+      }
+    }
+
+    return bugReportUpdated;
   }
 
   async remove(id: string) {
