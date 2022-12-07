@@ -82,15 +82,18 @@ export class BugReport implements Prisma.BugReportCreateManyInput {
   @IsOptional()
   reward_id?: string;
 
-  @ApiProperty({ default: Status.PENDING, enum: Status })
+  @ApiProperty({ default: Status.PENDING, enum: Status, required: false })
   @IsEnum(Status)
+  @IsOptional()
   status?: Status;
 
-  @ApiProperty({ readOnly: true })
+  @ApiProperty({ readOnly: true, required: false })
   @IsDate()
+  @IsOptional()
   created_at?: string | Date;
 
-  @ApiProperty({ readOnly: true })
+  @ApiProperty({ readOnly: true, required: false })
   @IsDate()
+  @IsOptional()
   updated_at?: string | Date;
 }

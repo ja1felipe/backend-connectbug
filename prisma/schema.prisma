@@ -51,7 +51,7 @@ model BugReport {
   assigned_to    User?   @relation(fields: [assigned_to_id], references: [id], name: "Assigned", onDelete: SetNull)
   assigned_to_id String?
 
-  external_id String?
+  external_id String? @unique
 
   reward    Reward? @relation(fields: [reward_id], name: "Reward", references: [id], onDelete: SetNull)
   reward_id String?
@@ -65,7 +65,7 @@ model User {
   email       String  @unique
   name        String
   role        Role    @default(USER)
-  external_id String?
+  external_id String? @unique
   password    String
 
   assignedBugReports BugReport[] @relation("Assigned")

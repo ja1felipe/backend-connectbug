@@ -36,6 +36,7 @@ export class BugReportService {
     createBugReportDto: CreateBugReportDto,
     createdById: string,
   ): Promise<BugReport> {
+    console.log(createdById);
     const bugReport = await this.prisma.bugReport.create({
       data: {
         ...createBugReportDto,

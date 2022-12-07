@@ -1,5 +1,7 @@
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
+import { UserFromJwt } from '@/auth/models/user-from-jwt.model';
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import {
   Controller,
@@ -30,8 +32,11 @@ export class BugReportController {
 
   @Post()
   @ApiCreatedResponse({ type: BugReport })
-  create(@Body() createBugReportDto: CreateBugReportDto) {
-    const id = '8bccf86a-9fce-4961-9b9e-09196f28cc52';
+  create(
+    @Body() createBugReportDto: CreateBugReportDto,
+    @CurrentUser() user: UserFromJwt,
+  ) {
+    const id = user.id;
     return this.bugReportService.create(createBugReportDto, id);
   }
 

@@ -8,6 +8,9 @@ export class CreateBugReportDto extends OmitType(BugReport, [
   'notes',
   'id',
   'reward',
+  'assigned_to_id',
+  'reward_id',
+  'status',
 ]) {
   @Exclude()
   @ApiHideProperty()
