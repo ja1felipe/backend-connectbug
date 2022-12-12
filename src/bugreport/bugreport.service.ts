@@ -16,27 +16,44 @@ export class BugReportService {
   private readonly _include = {
     steps: {
       select: {
+        id: true,
         description: true,
       },
     },
     notes: {
       select: {
+        id: true,
         note: true,
+        created_by: true,
       },
     },
     screenshots: {
       select: {
+        id: true,
         url: true,
       },
     },
     reward: true,
+    created_by: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    },
+    assigned_to: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    },
   };
 
   async create(
     createBugReportDto: CreateBugReportDto,
     createdById: string,
   ): Promise<BugReport> {
-    console.log(createdById);
     const bugReport = await this.prisma.bugReport.create({
       data: {
         ...createBugReportDto,

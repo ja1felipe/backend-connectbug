@@ -8,9 +8,18 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 export class NotesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createNoteDto: CreateNoteDto): Promise<NoteEntity> {
+  async create(
+    userId: string,
+    createNoteDto: CreateNoteDto,
+  ): Promise<NoteEntity> {
     const note = await this.prisma.note.create({
-      data: createNoteDto,
+      data: {
+        ...createNoteDto,
+        created_by_id: userId,
+      },
+      include: {
+        created_by: true,
+      },
     });
 
     return note;

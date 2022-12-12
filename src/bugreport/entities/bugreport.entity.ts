@@ -9,18 +9,16 @@ import { Type } from 'class-transformer';
 import { IsString, IsOptional, IsArray, IsEnum, IsDate } from 'class-validator';
 
 class OmitedScreenshotEntity extends OmitType(ScreenshotEntity, [
-  'id',
   'bug_report_id',
 ] as const) {}
 
 class OmitedStepEntity extends OmitType(StepEntity, [
-  'id',
   'bug_report_id',
 ] as const) {}
 
 class OmitedNoteEntity extends OmitType(NoteEntity, [
-  'id',
   'bug_report_id',
+  'created_by_id',
 ] as const) {}
 
 export class BugReport implements Prisma.BugReportCreateManyInput {

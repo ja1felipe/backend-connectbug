@@ -26,6 +26,10 @@ model Note {
   note          String
   bug_report    BugReport @relation(fields: [bug_report_id], references: [id], onDelete: Cascade)
   bug_report_id String
+  created_by     User   @relation(fields: [created_by_id], references: [id], name: "CreatedNote", onDelete: Cascade)
+  created_by_id  String
+
+  created_at DateTime @default(now())
 }
 
 enum Status {
@@ -70,6 +74,7 @@ model User {
 
   assignedBugReports BugReport[] @relation("Assigned")
   createdBugReports  BugReport[] @relation("Created")
+  createdNotes  Note[] @relation("CreatedNote")
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

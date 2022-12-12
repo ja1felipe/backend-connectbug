@@ -9,6 +9,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { NoteEntity } from '@/notes/entities/note.entity';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { UserFromJwt } from '@/auth/models/user-from-jwt.model';
 
 @ApiBearerAuth()
 @Controller('notes')
@@ -18,8 +20,11 @@ export class NotesController {
 
   @Post()
   @ApiCreatedResponse({ type: NoteEntity })
-  create(@Body() createNoteDto: CreateNoteDto) {
-    return this.notesService.create(createNoteDto);
+  create(
+    @Body() createNoteDto: CreateNoteDto,
+    @CurrentUser() user: UserFromJwt,
+  ) {
+    return this.notesService.create(user.id, createNoteDto);
   }
 
   @Patch(':id')
