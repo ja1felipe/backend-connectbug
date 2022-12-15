@@ -2,7 +2,7 @@ import { User } from '@/users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Note } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsDate, IsOptional, IsString } from 'class-validator';
 
 export class NoteEntity implements Note {
   @ApiProperty()
@@ -26,4 +26,9 @@ export class NoteEntity implements Note {
   })
   @Type(() => User)
   created_by?: User;
+
+  @ApiProperty({ readOnly: true, required: false })
+  @IsDate()
+  @IsOptional()
+  created_at: Date;
 }

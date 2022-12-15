@@ -2,6 +2,7 @@ import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
 import { UserFromJwt } from '@/auth/models/user-from-jwt.model';
+import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import {
   Controller,
@@ -65,8 +66,11 @@ export class BugReportController {
 
   @Patch('conclude/:id')
   @ApiOkResponse({ type: BugReport })
-  conclude(@Param('id') id: string) {
-    return this.bugReportService.conclude(id);
+  conclude(
+    @Param('id') id: string,
+    @Body() concludeBugReportDto: ConcludeBugReportDto,
+  ) {
+    return this.bugReportService.conclude(id, concludeBugReportDto);
   }
 
   @Delete(':id')

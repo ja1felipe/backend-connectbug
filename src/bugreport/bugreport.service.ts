@@ -1,3 +1,4 @@
+import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
@@ -25,6 +26,7 @@ export class BugReportService {
         id: true,
         note: true,
         created_by: true,
+        created_at: true,
       },
     },
     screenshots: {
@@ -97,7 +99,10 @@ export class BugReportService {
     return bugReport;
   }
 
-  async conclude(id: string): Promise<BugReport> {
+  async conclude(
+    id: string,
+    concludeBugReportDto: ConcludeBugReportDto,
+  ): Promise<BugReport> {
     const bugReport = await this.prisma.bugReport.findUnique({
       where: { id },
     });
@@ -111,6 +116,7 @@ export class BugReportService {
     const bugReportUpdated = await this.prisma.bugReport.update({
       data: {
         status: Status.CLOSED,
+        reward_id: concludeBugReportDto.reward_id,
       },
       where: { id },
       include: this._include,
@@ -120,9 +126,8 @@ export class BugReportService {
       try {
         this.httpService.post(bugReportUpdated.reward.url, {
           user_id: bugReportUpdated.created_by_id,
+          user_email: bugReportUpdated.created_by.email,
           bug_report_id: bugReportUpdated.id,
-          bug_report_external_id: bugReportUpdated.external_id,
-          bug_report_assigned_to_id: bugReportUpdated.assigned_to_id,
         });
       } catch (err) {
         console.error(
