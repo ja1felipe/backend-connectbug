@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class ConcludeBugReportDto {
   @ApiProperty()
   @IsString()
-  reward_id: string;
+  @IsOptional()
+  reward_id?: string;
 }

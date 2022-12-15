@@ -3,7 +3,7 @@ import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Status } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
 import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
@@ -113,27 +113,38 @@ export class BugReportService {
       );
     }
 
+    const updateData: Prisma.BugReportUncheckedUpdateInput = {
+      status: Status.CLOSED,
+    };
+
+    if (concludeBugReportDto.reward_id) {
+      updateData.reward_id = concludeBugReportDto.reward_id;
+    }
+
     const bugReportUpdated = await this.prisma.bugReport.update({
-      data: {
-        status: Status.CLOSED,
-        reward_id: concludeBugReportDto.reward_id,
-      },
+      data: updateData,
       where: { id },
       include: this._include,
     });
 
     if (bugReportUpdated.reward) {
-      try {
-        this.httpService.post(bugReportUpdated.reward.url, {
+      this.httpService.axiosRef
+        .post(bugReportUpdated.reward.url, {
           user_id: bugReportUpdated.created_by_id,
           user_email: bugReportUpdated.created_by.email,
           bug_report_id: bugReportUpdated.id,
+        })
+        .then(() => {
+          console.log(
+            `Webhook sended to ${bugReportUpdated.reward.url} after bug report ${bugReportUpdated.id} be conclueded.`,
+          );
+        })
+        .catch((err) => {
+          console.error(
+            `Error sending reward webhook request of bug report with id ${bugReportUpdated.id}`,
+            err,
+          );
         });
-      } catch (err) {
-        console.error(
-          `Error sending reward webhook request of bug report with id ${bugReportUpdated.id}`,
-        );
-      }
     }
 
     return bugReportUpdated;
