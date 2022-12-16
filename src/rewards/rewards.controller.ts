@@ -42,6 +42,11 @@ export class RewardsController {
     return this.rewardsService.findOne(id);
   }
 
+  @Get('test/:id')
+  test(@Param('id') id: string) {
+    return this.rewardsService.test(id);
+  }
+
   @Patch(':id')
   @ApiOkResponse({ type: Reward })
   update(@Param('id') id: string, @Body() updateRewardDto: UpdateRewardDto) {

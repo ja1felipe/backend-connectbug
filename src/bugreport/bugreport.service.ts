@@ -136,7 +136,7 @@ export class BugReportService {
         })
         .then(() => {
           console.log(
-            `Webhook sended to ${bugReportUpdated.reward.url} after bug report ${bugReportUpdated.id} be conclueded.`,
+            `Webhook sent to ${bugReportUpdated.reward.url} after bug report ${bugReportUpdated.id} be conclueded.`,
           );
         })
         .catch((err) => {
