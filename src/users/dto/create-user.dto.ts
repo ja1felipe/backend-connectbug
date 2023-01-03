@@ -1,8 +1,12 @@
 import { User } from '@/users/entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsString, MinLength, MaxLength, Matches } from 'class-validator';
 
-export class CreateUserDto extends User {
+export class CreateUserDto extends OmitType(User, [
+  'created_at',
+  'id',
+  'updated_at',
+]) {
   @ApiProperty()
   @IsString()
   @MinLength(4)

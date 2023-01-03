@@ -11,6 +11,7 @@ export class CreateBugReportDto extends OmitType(BugReport, [
   'assigned_to_id',
   'reward_id',
   'status',
+  'screenshots',
 ]) {
   @Exclude()
   @ApiHideProperty()

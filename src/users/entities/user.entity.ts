@@ -1,6 +1,13 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Prisma, Role } from '@prisma/client';
-import { IsDate, IsEmail, IsEnum, IsString, IsUUID } from 'class-validator';
+import {
+  IsDate,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class User implements Prisma.UserCreateManyInput {
   @ApiProperty({ readOnly: true })
@@ -26,13 +33,16 @@ export class User implements Prisma.UserCreateManyInput {
 
   @ApiProperty({ required: false })
   @IsString()
-  external_id: string;
+  @IsOptional()
+  external_id?: string;
 
   @ApiProperty({ readOnly: true })
   @IsDate()
-  created_at: Date;
+  @IsOptional()
+  created_at?: Date;
 
   @ApiProperty({ readOnly: true })
   @IsDate()
-  updated_at: Date;
+  @IsOptional()
+  updated_at?: Date;
 }

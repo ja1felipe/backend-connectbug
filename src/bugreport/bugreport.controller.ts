@@ -1,7 +1,5 @@
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
-import { UserFromJwt } from '@/auth/models/user-from-jwt.model';
 import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
 import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import {
@@ -13,19 +11,16 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { BugReportService } from './bugreport.service';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
 import { UpdateBugReportDto } from './dto/update-bugreport.dto';
 
-@ApiBearerAuth()
 @Controller('bugreport')
 @ApiTags('BugReports')
 export class BugReportController {
@@ -33,12 +28,12 @@ export class BugReportController {
 
   @Post()
   @ApiCreatedResponse({ type: BugReport })
-  create(
+  @UseInterceptors(FilesInterceptor('screenshots'))
+  async create(
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() createBugReportDto: CreateBugReportDto,
-    @CurrentUser() user: UserFromJwt,
   ) {
-    const id = user.id;
-    return this.bugReportService.create(createBugReportDto, id);
+    return this.bugReportService.create(createBugReportDto, files);
   }
 
   @Get()

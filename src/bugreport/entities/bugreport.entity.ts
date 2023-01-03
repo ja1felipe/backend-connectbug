@@ -12,7 +12,7 @@ class OmitedScreenshotEntity extends OmitType(ScreenshotEntity, [
   'bug_report_id',
 ] as const) {}
 
-class OmitedStepEntity extends OmitType(StepEntity, [
+export class OmitedStepEntity extends OmitType(StepEntity, [
   'bug_report_id',
 ] as const) {}
 
@@ -34,12 +34,9 @@ export class BugReport implements Prisma.BugReportCreateManyInput {
   @IsString()
   description: string;
 
-  @ApiProperty({
-    type: [OmitedStepEntity],
-  })
-  @Type(() => OmitedStepEntity)
-  @IsArray()
-  steps?: OmitedStepEntity[];
+  @ApiProperty()
+  @IsString()
+  steps?: string | OmitedStepEntity[];
 
   @ApiProperty({
     type: [OmitedScreenshotEntity],

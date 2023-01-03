@@ -1,6 +1,10 @@
 import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
-import { BugReport } from '@/bugreport/entities/bugreport.entity';
+import {
+  BugReport,
+  OmitedStepEntity,
+} from '@/bugreport/entities/bugreport.entity';
 import { PrismaService } from '@/prisma/prisma.service';
+import { ThumbSnapService } from '@/thumb-snap/thumb-snap.service';
 import { HttpService } from '@nestjs/axios';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma, Status } from '@prisma/client';
@@ -12,6 +16,7 @@ export class BugReportService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly httpService: HttpService,
+    private readonly thumpSnapService: ThumbSnapService,
   ) {}
 
   private readonly _include = {
@@ -54,14 +59,23 @@ export class BugReportService {
 
   async create(
     createBugReportDto: CreateBugReportDto,
-    createdById: string,
+    files: Express.Multer.File[],
   ): Promise<BugReport> {
+    console.log(createBugReportDto);
+    const stepsString = createBugReportDto.steps as string;
+    const steps = JSON.parse(stepsString) as OmitedStepEntity;
+    console.log(stepsString, steps);
+    const screenshots = (await this.thumpSnapService.upload(files)).map(
+      (url) => ({
+        url,
+      }),
+    );
     const bugReport = await this.prisma.bugReport.create({
       data: {
         ...createBugReportDto,
-        created_by_id: createdById,
-        steps: { create: createBugReportDto.steps },
-        screenshots: { create: createBugReportDto.screenshots },
+        created_by_id: 'd85e6024-b614-4bef-a207-41f01d787656',
+        steps: { create: steps },
+        screenshots: { create: screenshots },
       },
       include: this._include,
     });
