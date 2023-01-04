@@ -6,7 +6,14 @@ import { OmitType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma, Status } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsArray, IsEnum, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsArray,
+  IsEnum,
+  IsDate,
+  IsJSON,
+} from 'class-validator';
 
 class OmitedScreenshotEntity extends OmitType(ScreenshotEntity, [
   'bug_report_id',
@@ -51,6 +58,11 @@ export class BugReport implements Prisma.BugReportCreateManyInput {
   @Type(() => OmitedNoteEntity)
   @IsArray()
   notes?: OmitedNoteEntity[];
+
+  @ApiProperty()
+  @IsJSON()
+  @IsOptional()
+  deviceInfos?: string | Prisma.JsonValue;
 
   @ApiProperty({
     type: Reward,

@@ -48,6 +48,8 @@ model BugReport {
   screenshots Screenshot[]
   notes       Note[]
 
+  deviceInfos Json?
+
   status Status @default(PENDING)
 
   created_by     User?   @relation(fields: [created_by_id], references: [id], name: "Created", onDelete: SetNull)

@@ -61,10 +61,18 @@ export class BugReportService {
     createBugReportDto: CreateBugReportDto,
     files: Express.Multer.File[],
   ): Promise<BugReport> {
-    console.log(createBugReportDto);
-    const stepsString = createBugReportDto.steps as string;
-    const steps = JSON.parse(stepsString) as OmitedStepEntity;
-    console.log(stepsString, steps);
+    let steps = undefined;
+    if (createBugReportDto.steps) {
+      const stepsString = createBugReportDto.steps as string;
+      steps = JSON.parse(stepsString) as OmitedStepEntity;
+    }
+
+    let deviceInfos = undefined;
+    if (createBugReportDto.deviceInfos) {
+      const deviceInfosString = createBugReportDto.deviceInfos as string;
+      deviceInfos = JSON.parse(deviceInfosString) as Prisma.JsonValue;
+    }
+
     const screenshots = (await this.thumpSnapService.upload(files)).map(
       (url) => ({
         url,
@@ -73,6 +81,7 @@ export class BugReportService {
     const bugReport = await this.prisma.bugReport.create({
       data: {
         ...createBugReportDto,
+        deviceInfos,
         created_by_id: 'd85e6024-b614-4bef-a207-41f01d787656',
         steps: { create: steps },
         screenshots: { create: screenshots },
