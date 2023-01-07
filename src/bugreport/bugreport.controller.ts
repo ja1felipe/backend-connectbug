@@ -15,7 +15,12 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { BugReportService } from './bugreport.service';
 import { CreateBugReportDto } from './dto/create-bugreport.dto';
@@ -29,6 +34,7 @@ export class BugReportController {
   @Post()
   @ApiCreatedResponse({ type: BugReport })
   @UseInterceptors(FilesInterceptor('screenshots'))
+  @ApiConsumes('multipart/form-data')
   async create(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() createBugReportDto: CreateBugReportDto,
@@ -38,8 +44,6 @@ export class BugReportController {
 
   @Get()
   @ApiOkResponse({ type: BugReport, isArray: true })
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN, Role.DEV, Role.QA)
   findAll() {
     return this.bugReportService.findAll();
   }
@@ -48,6 +52,12 @@ export class BugReportController {
   @ApiOkResponse({ type: BugReport })
   findOne(@Param('id') id: string) {
     return this.bugReportService.findOne(id);
+  }
+
+  @Get('user/:id')
+  @ApiOkResponse({ type: BugReport })
+  findByCreator(@Param('id') id: string) {
+    return this.bugReportService.findByCreator(id);
   }
 
   @Patch(':id')

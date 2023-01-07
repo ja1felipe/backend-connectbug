@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 
 export class CreateBugReportDto extends OmitType(BugReport, [
-  'created_by_id',
   'notes',
   'id',
   'reward',

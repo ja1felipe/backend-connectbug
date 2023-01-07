@@ -52,8 +52,8 @@ model BugReport {
 
   status Status @default(PENDING)
 
-  created_by     User?   @relation(fields: [created_by_id], references: [id], name: "Created", onDelete: SetNull)
   created_by_id  String?
+
   assigned_to    User?   @relation(fields: [assigned_to_id], references: [id], name: "Assigned", onDelete: SetNull)
   assigned_to_id String?
 
@@ -75,7 +75,6 @@ model User {
   password    String
 
   assignedBugReports BugReport[] @relation("Assigned")
-  createdBugReports  BugReport[] @relation("Created")
   createdNotes       Note[]      @relation("CreatedNote")
 
   created_at DateTime @default(now())

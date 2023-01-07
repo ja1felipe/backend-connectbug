@@ -1,8 +1,5 @@
 import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
-import {
-  BugReport,
-  OmitedStepEntity,
-} from '@/bugreport/entities/bugreport.entity';
+import { BugReport } from '@/bugreport/entities/bugreport.entity';
 import { PrismaService } from '@/prisma/prisma.service';
 import { ThumbSnapService } from '@/thumb-snap/thumb-snap.service';
 import { HttpService } from '@nestjs/axios';
@@ -41,13 +38,6 @@ export class BugReportService {
       },
     },
     reward: true,
-    created_by: {
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    },
     assigned_to: {
       select: {
         id: true,
@@ -64,7 +54,10 @@ export class BugReportService {
     let steps = undefined;
     if (createBugReportDto.steps) {
       const stepsString = createBugReportDto.steps as string;
-      steps = JSON.parse(stepsString) as OmitedStepEntity;
+      const stepsArr = JSON.parse(stepsString) as string[];
+      steps = stepsArr.map((step) => ({
+        description: step,
+      }));
     }
 
     let deviceInfos = undefined;
@@ -82,7 +75,6 @@ export class BugReportService {
       data: {
         ...createBugReportDto,
         deviceInfos,
-        created_by_id: 'd85e6024-b614-4bef-a207-41f01d787656',
         steps: { create: steps },
         screenshots: { create: screenshots },
       },
@@ -103,6 +95,15 @@ export class BugReportService {
   async findOne(id: string): Promise<BugReport> {
     const bugReport = await this.prisma.bugReport.findUnique({
       where: { id },
+      include: this._include,
+    });
+
+    return bugReport;
+  }
+
+  async findByCreator(id: string): Promise<BugReport[]> {
+    const bugReport = await this.prisma.bugReport.findMany({
+      where: { created_by_id: id },
       include: this._include,
     });
 
@@ -154,7 +155,6 @@ export class BugReportService {
       this.httpService.axiosRef
         .post(bugReportUpdated.reward.url, {
           user_id: bugReportUpdated.created_by_id,
-          user_email: bugReportUpdated.created_by.email,
           bug_report_id: bugReportUpdated.id,
         })
         .then(() => {
