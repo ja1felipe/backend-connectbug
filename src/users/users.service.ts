@@ -36,12 +36,19 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
     const user = await this.prisma.user.update({
       data: updateUserDto,
       where: { id },
     });
 
-    return user;
+    return {
+      ...user,
+      password: undefined,
+    };
   }
 
   async remove(id: string) {

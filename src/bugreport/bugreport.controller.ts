@@ -1,3 +1,4 @@
+import { IsPublic } from '@/auth/decorators/is-public.decorator';
 import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
 import { ConcludeBugReportDto } from '@/bugreport/dto/conclude-bugreport.dto';
@@ -35,6 +36,7 @@ export class BugReportController {
   @ApiCreatedResponse({ type: BugReport })
   @UseInterceptors(FilesInterceptor('screenshots'))
   @ApiConsumes('multipart/form-data')
+  @IsPublic()
   async create(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() createBugReportDto: CreateBugReportDto,
@@ -56,6 +58,7 @@ export class BugReportController {
 
   @Get('user/:id')
   @ApiOkResponse({ type: BugReport })
+  @IsPublic()
   findByCreator(@Param('id') id: string) {
     return this.bugReportService.findByCreator(id);
   }

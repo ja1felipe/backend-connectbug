@@ -23,6 +23,8 @@ import { Roles } from '@/auth/decorators/roles.decorator';
 import { RolesGuard } from '@/auth/guards/roles.guard';
 import { Role } from '@prisma/client';
 import { User } from '@/users/entities/user.entity';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { UserFromJwt } from '@/auth/models/user-from-jwt.model';
 
 @Controller('users')
 @ApiTags('Users')
@@ -52,7 +54,14 @@ export class UsersController {
 
   @Patch(':id')
   @ApiOkResponse({ type: User })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @CurrentUser() user: UserFromJwt,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    if (updateUserDto.password && user.id !== id) {
+      delete updateUserDto.password;
+    }
     return this.usersService.update(id, updateUserDto);
   }
 
